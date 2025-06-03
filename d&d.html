@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Drag and Drop Image</title>
+  <style>
+    #drop-zone {
+      width: 300px;
+      height: 200px;
+      border: 2px dashed #888;
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #aaa;
+      font-size: 16px;
+      margin: 50px auto;
+      transition: 0.3s;
+    }
+
+    #drop-zone.dragover {
+      border-color: #4caf50;
+      color: #4caf50;
+      background-color: #f0fff0;
+    }
+
+    #preview {
+      display: block;
+      max-width: 100%;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="drop-zone">Drag and drop image here</div>
+  <img id="preview" src="master-unknown-p2URciDs6tE-unsplash.jpg" alt="Image Preview" style="display:none;"/>
+
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const preview = document.getElementById('preview');
+
+    // Prevent default behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      dropZone.addEventListener(eventName, e => e.preventDefault());
+    });
+
+    // Visual feedback
+    dropZone.addEventListener('dragover', () => {
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
+    // Handle drop
+    dropZone.addEventListener('drop', (e) => {
+      dropZone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          preview.src = reader.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        alert('Please drop a valid image file.');
+      }
+    });
+  </script>
+
+</body>
+</html>
